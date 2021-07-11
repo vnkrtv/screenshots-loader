@@ -1,0 +1,19 @@
+#!/bin/bash
+
+cd /usr/share/python3/quizer
+. /usr/share/python3/venv/bin/activate
+
+python manage.py makemigrations
+python manage.py migrate
+echo yes | python manage.py collectstatic
+
+echo 'from django.contrib.auth.models import Group; l = Group(id=1, name="lecturer"); l.save()' | python manage.py shell
+echo 'from django.contrib.auth.models import Group; s = Group(id=2, name="student"); s.save()' | python manage.py shell
+
+if [[ ! -z "${WORKERS_NUM}" ]]; then
+  WORKERS_NUM="${WORKERS_NUM}"
+else
+  WORKERS_NUM=4
+fi
+
+gunicorn -w ${WORKERS_NUM} -k uvicorn.workers.UvicornWorker  -b 0.0.0.0:80 quizer.asgi:application

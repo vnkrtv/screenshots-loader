@@ -16,4 +16,4 @@ else
   WORKERS_NUM=4
 fi
 
-gunicorn -w ${WORKERS_NUM} -k uvicorn.workers.UvicornWorker  -b 0.0.0.0:80 quizer.asgi:application
+gunicorn -w ${WORKERS_NUM} -b 0.0.0.0:80 quizer.wsgi:application

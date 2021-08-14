@@ -47,9 +47,9 @@ class LoginView(View):
 
 
 class UserAPI(APIView):
-    # authentication_classes = []
-    permission_classes = [IsAuthenticated, EditingForLecturerOnly]
-    # permission_classes = [IsLecturer]
+    authentication_classes = []
+    permission_classes = []
+    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, request):
         users = Profile.objects.all()
@@ -65,7 +65,9 @@ class UserAPI(APIView):
 
 
 class SubjectAPI(APIView):
-    permission_classes = [IsAuthenticated, EditingForLecturerOnly]
+    authentication_classes = []
+    permission_classes = []
+    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = SubjectSerializer(Subject.objects.all(), many=True)

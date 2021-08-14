@@ -1,5 +1,12 @@
-venv
 .idea
 
+# backend
+backend/venv
+backend/static
 *pyc
 __pycache__
+
+# frontend
+frontend/node_modules
+frontend/.next
+frontend/package-lock.json

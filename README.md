@@ -5,6 +5,8 @@
 Comming soon
 
 ## Deployment
+
+### Backend
 Download Python 3.x and add it to PATH.
 
 Install:
@@ -21,3 +23,6 @@ Run:
 ```bash
 python app/manage.py runserver 0.0.0.0:8000
 ```
+
+### Frontend
+

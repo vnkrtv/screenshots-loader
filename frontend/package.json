@@ -1,0 +1,27 @@
+{
+  "name": "screenshots-loader",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 5000",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "js-cookie": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "next": "^10.0.0",
+    "next-redux-wrapper": "^7.0.2",
+    "prop-types": "^15.7.2",
+    "react": "17.0.1",
+    "react-bootstrap": "^1.6.1",
+    "react-dom": "17.0.1",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.4"
+  }
+}

@@ -17,6 +17,8 @@ urlpatterns = [
     path('users/', views.UserAPI.as_view(), name='users_api'),
     path('subjects/', views.SubjectAPI.as_view(), name='subjects_api'),
     path('subjects/<subject_id>', csrf_exempt(views.SubjectAPI.as_view()), name='edit_subjects_api'),
+    path('lessons/', views.LessonAPI.as_view(), name='lesson_api'),
+    path('lessons/<lesson_id>',csrf_exempt(views.LessonAPI.as_view()), name='edit_lessons_api'), 
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

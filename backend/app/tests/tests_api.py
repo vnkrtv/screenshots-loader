@@ -56,6 +56,13 @@ class SubjectAPITest(MainTest):
     """
     Tests for SubjectAPI
     """
+    def test_get(self):
+        """
+        Test for method get
+        """
+        client = APIClient()
+        response = client.get(reverse('api:subjects_api'))
+        self.assertEqual(response.status_code,200)
 
     def test_get_for_unauthenticated_user(self):
         """

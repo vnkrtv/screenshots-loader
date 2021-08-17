@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import Profile, Subject
+from .models import Profile, Subject, Screenshot
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,3 +42,19 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = ('id', 'name', 'description')
+
+class ScreenshotSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return Screenshot.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.lesson = validation_data.get('lesson', instance.lesson)
+        instance.user = validation_data.get('user', instance.user)
+        instance.image = validation_data.get('image', instance.image)
+        instance.description = validetion_data.get('description', instance.description)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Screenshot
+        fields = ('id', 'lesson', 'user', 'image', 'description')

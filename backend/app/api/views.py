@@ -100,3 +100,40 @@ class SubjectAPI(APIView):
         return Response({
             'success': message
         })
+
+class ScreenshotAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
+
+    def get(self, _):
+        serializer = ScreenshotSerializer(Screenshot.objects.all(), many=True)
+        return Response({
+            'screenshots': serializer.data
+        })
+
+    def post(self, request):
+        serializer = ScreeshotSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            new_screenshot = serializer.save()
+        return Response({
+            'success': "Скриншот '%s' успешно добавлен." % new_screenshot.name
+        })
+
+    def put(self, request, screenshot_id):
+        updated_screenhot = get_object_or_404(Screenshot.objects.all(), pk=screenshot_id)
+        serializer = ScreenshotSerializer(instance=updated_screenshot, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            updated_screenshot = serializer.save()
+        return Response({
+            'success': "Скриншот '%s' был успешно отредактирован." % updated_screenshot.name
+        })
+
+    def delete(self, _, screenshot_id):
+        screenshot = get_object_or_404(Screenshot.objects.all(), pk=screenshot_id)
+        message = "Скриншот '%s' был успешно удален." % screenshot.name
+        screenshot.delete()
+        return Response({
+            'success': message
+        })
+

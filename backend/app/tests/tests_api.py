@@ -47,9 +47,10 @@ class MainTest(TestCase):
             name='Subject',
             description='Description of subject')
 
+        '''
         self.lesson = Lesson.objects.create(
             subject=self.subject,
-            description='Description of hard test for Subject')
+            description='Description of hard test for Subject')'''
 
 
 class SubjectAPITest(MainTest):
@@ -63,7 +64,22 @@ class SubjectAPITest(MainTest):
         client = APIClient()
         response = client.get(reverse('api:subjects_api'))
         self.assertEqual(response.status_code,200)
-
+        print(response.data)
+        
+    def test_post(self):
+        """
+        Test for method post
+        """
+        client = APIClient()
+        data = {
+                'id': '3',
+                'name': 'Subject1',
+                'description': 'This is subject for test'
+        }
+        response = client.post(reverse('api:subjects_api'), json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code,200)
+        response = client.get(reverse('api:subjects_api'))
+        
     def test_get_for_unauthenticated_user(self):
         """
         Test response code for unauthenticated user

@@ -1,5 +1,4 @@
 # pylint: skip-file
-from django.conf.urls import url
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 
@@ -8,7 +7,6 @@ from . import views
 app_name = 'api'
 
 urlpatterns = [
-    path('login/', csrf_exempt(views.LoginView.as_view()), name='login_api'),
     path('users/', views.UserAPI.as_view(), name='users_api'),
     path('subjects/', views.SubjectAPI.as_view(), name='subjects_api'),
     path('subjects/<subject_id>', csrf_exempt(views.SubjectAPI.as_view()), name='edit_subjects_api'),

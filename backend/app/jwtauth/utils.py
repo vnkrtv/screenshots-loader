@@ -12,7 +12,7 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.conf import settings
 
-from ..api.models import Profile
+from api.models import Profile
 
 
 def get_auth_data(request: HttpRequest) -> Tuple[str, str]:

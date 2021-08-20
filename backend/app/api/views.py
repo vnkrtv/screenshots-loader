@@ -12,9 +12,9 @@ from rest_framework.response import Response
 
 from . import utils
 from .decorators import unauthenticated_user, allowed_users
-from .models import Profile, Subject
+from .models import Profile, Subject, Lesson
 from .permissions import EditingForLecturerOnly
-from .serializers import ProfileSerializer, SubjectSerializer
+from .serializers import ProfileSerializer, SubjectSerializer, LessonSerializer
 
 
 @unauthenticated_user
@@ -101,6 +101,7 @@ class SubjectAPI(APIView):
             'success': message
         })
 
+
 class ScreenshotAPI(APIView):
     authentication_classes = []
     permission_classes = []
@@ -137,3 +138,39 @@ class ScreenshotAPI(APIView):
             'success': message
         })
 
+
+class LessonAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
+
+    def get(self, _):
+        serializer = LessonSerializer(Lesson.objects.all(), many=True)
+        return Response({
+            'lessons': serializer.data
+        })
+
+    def post(self, request):
+        serializer = LessonSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            new_lesson = serializer.save()
+        return Response({
+            'success': "Учебное занятие '%s' успешно добавлен." % new_lesson.name
+        })
+
+    def put(self, request, lesson_id):
+        updated_lesson = get_object_or_404(Lesson.objects.all(), pk=lesson_id)
+        serializer = LessonSerializer(instance=updated_lesson, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            updated_lesson = serializer.save()
+        return Response({
+            'success': "Учебное занятие '%s' было успешно отредактировано." % updated_lesson.name
+        })
+
+    def delete(self, _, lesson_id):
+        lesson = get_object_or_404(Lesson.objects.all(), pk=lesson_id)
+        message = "Учебное занятие '%s' успешно удалено." % lesson.name
+        lesson.delete()
+        return Response({
+            'success': message
+        })

@@ -63,8 +63,10 @@ class SubjectAPITest(MainTest):
         """
         client = APIClient()
         response = client.get(reverse('api:subjects_api'))
-        self.assertEqual(response.status_code,200)
-        print(response.data)
+        all_objects = Subject.objects.all()
+        for i in all_objects:
+            self.assertEqual(i,response.get('subject', i))
+       
         
     def test_post(self):
         """
@@ -72,14 +74,41 @@ class SubjectAPITest(MainTest):
         """
         client = APIClient()
         data = {
-                'id': '3',
                 'name': 'Subject1',
                 'description': 'This is subject for test'
         }
         response = client.post(reverse('api:subjects_api'), json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code,200)
-        response = client.get(reverse('api:subjects_api'))
-        
+        self.assertContains(response, "success")
+        self.assertEqual(1, len(Subject.objects.filter(name="Subject1")))
+
+    def test_put(self):
+        """
+        Test for method put
+        """
+        client = APIClient()
+        data = {
+                'name': 'Subject2',
+                'description': 'This is subject for test'
+        }
+        response = client.put(reverse('api:edit_subjects_api', kwargs={"subject_id": 1}), json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code,200)
+        self.assertContains(response, 'success')
+        self.assertNotEqual("Subject", Subject.objects.get(id=1).name)
+    
+    def test_delete(self):
+        """
+        Test for method delete
+        """
+        client = APIClient()
+        data = {
+                'name': 'Subject',
+        }
+        response = client.delete(reverse('api:edit_subjects_api', kwargs={"subject_id": 1}))
+        self.assertEqual(response.status_code,200)
+        self.assertContains(response, 'success')
+        self.assertEqual(0, len(Subject.objects.filter(id=1)))
+
     def test_get_for_unauthenticated_user(self):
         """
         Test response code for unauthenticated user

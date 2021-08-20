@@ -10,8 +10,6 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
     path('api/auth/', include('jwtauth.urls')),
     path('api/docs/', schema_view),
-
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

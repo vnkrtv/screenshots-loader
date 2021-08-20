@@ -10,8 +10,6 @@ from .serializers import ProfileSerializer, SubjectSerializer, LessonSerializer,
 
 
 class UserAPI(APIView):
-    authentication_classes = []
-    permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, request):
         users = Profile.objects.all()
@@ -27,8 +25,6 @@ class UserAPI(APIView):
 
 
 class SubjectAPI(APIView):
-    authentication_classes = []
-    permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = SubjectSerializer(Subject.objects.all(), many=True)
@@ -64,8 +60,6 @@ class SubjectAPI(APIView):
 
 
 class ScreenshotAPI(APIView):
-    authentication_classes = []
-    permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = ScreenshotSerializer(Screenshot.objects.all(), many=True)
@@ -100,8 +94,6 @@ class ScreenshotAPI(APIView):
 
 
 class LessonAPI(APIView):
-    authentication_classes = []
-    permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = LessonSerializer(Lesson.objects.all(), many=True)

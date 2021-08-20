@@ -13,5 +13,5 @@ urlpatterns = [
     path('screenshots/', views.ScreenshotAPI.as_view(), name='screenshots_api'),
     path('screenshots/<screenshot_id>', csrf_exempt(views.ScreenshotAPI.as_view()), name='edit_screenshots_api'),
     path('lessons/', views.LessonAPI.as_view(), name='lesson_api'),
-    path('lessons/<lesson_id>',csrf_exempt(views.LessonAPI.as_view()), name='edit_lessons_api'),
+    path('lessons/<lesson_id>', csrf_exempt(views.LessonAPI.as_view()), name='edit_lessons_api'),
 ]

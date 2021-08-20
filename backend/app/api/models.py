@@ -60,6 +60,9 @@ class Subject(models.Model):
 
 class Lesson(models.Model):
     id = models.IntegerField(primary_key=True)
+    name = models.CharField(
+        verbose_name='Название занятия',
+        max_length=50, default=' ')
     subject = models.ForeignKey(
         Subject,
         verbose_name='Предмет',

@@ -49,12 +49,13 @@ class LessonSerializer(serializers.ModelSerializer):
         return Lesson.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.subject = validated_data.get('subject', instance.subject)
+        instance.subject = Subject.objects.get(id=validated_data.get('subject', instance.subject))
         instance.description = validated_data.get('description', instance.description)
         instance.save()
         return instance
 
     class Meta:
-        model = Subject
+        model = Lesson
+        read_only_fields = ('id',)
         fields = ('id', 'subject', 'description')
 

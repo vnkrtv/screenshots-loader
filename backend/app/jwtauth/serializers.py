@@ -27,11 +27,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
         password = validated_data['password']
         password2 = validated_data['password2']
         if password != password2:
-            raise serializers.ValidationError({
-                'password': 'Пароли различаются'
-            })
+            raise serializers.ValidationError('пароли различаются')
+        if User.objects.filter(username=username):
+            raise serializers.ValidationError(f'пользователь {username} уже существует')
         user = User(username=username)
         user.set_password(password)
         user.save()
-        user.profile = create_profile(user, fullname)
+        create_profile(user, fullname)
         return user

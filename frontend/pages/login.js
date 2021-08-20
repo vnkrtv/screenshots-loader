@@ -61,7 +61,7 @@ export default function Login({req, res}) {
         const res = await fetch(
             "http://localhost:5555/login/", {
                 body: JSON.stringify({
-                    username: e.target.username.value,
+                    fullname: e.target.username.value,
                     password: e.target.password.value,
                 }),
                 headers: {
@@ -82,7 +82,7 @@ export default function Login({req, res}) {
         <Card>
             <form onSubmit={registerUser}>
                 <FormControl>
-                    <InputLabel htmlFor="username">Username</InputLabel>
+                    <InputLabel htmlFor="fullanme">Username</InputLabel>
                     <Input id={"username"} name={"username"} type={"text"}/>
                 </FormControl>
                 <br/>

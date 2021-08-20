@@ -55,24 +55,24 @@ function Home({books, page}) {
                         <button type="submit">Register</button>
                     </form>
                     <div>
-                        {books.map((book) => (
-                            <Link href={"http://localhost:3000"}>
-                                <Grid>
-                                    <Card>
-                                        <CardMedia></CardMedia>
-                                        <CardContent>
-                                            <Typography gutterBottom component="p">
-                                                {book.title}
-                                            </Typography>
-                                            <Box component="p" fontSize={16} fontStyle={900}>
-                                                {book.author.firstname}
-                                                {book.author.lastname}
-                                            </Box>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            </Link>
-                        ))}
+                        {/*{books.map((book) => (*/}
+                        {/*    <Link href={"http://localhost:3000"}>*/}
+                        {/*        <Grid>*/}
+                        {/*            <Card>*/}
+                        {/*                <CardMedia></CardMedia>*/}
+                        {/*                <CardContent>*/}
+                        {/*                    <Typography gutterBottom component="p">*/}
+                        {/*                        {book.title}*/}
+                        {/*                    </Typography>*/}
+                        {/*                    <Box component="p" fontSize={16} fontStyle={900}>*/}
+                        {/*                        {book.author.firstname}*/}
+                        {/*                        {book.author.lastname}*/}
+                        {/*                    </Box>*/}
+                        {/*                </CardContent>*/}
+                        {/*            </Card>*/}
+                        {/*        </Grid>*/}
+                        {/*    </Link>*/}
+                        {/*))}*/}
                     </div>
                     <FormControl>
                         <InputLabel htmlFor="my-input">Email address</InputLabel>
@@ -91,32 +91,32 @@ function Home({books, page}) {
         </>
     )
 }
-
-export async function getStaticProps(context) {
-    const res = await fetch(
-        process.env.API_URL + 'users',
-        {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-    const books = await res.json();
-
-    // const resPage = await fetch(
-    //     "http://localhost:5555/",
-    //     {
-    //         headers: {
-    //             'Content-Type': 'text/html'
-    //         }
-    //     });
-    // const page = await resPage.text();
-    const page = "<div>Hello!</div>";
-    return {
-        props: {
-            books,
-            page
-        }
-    };
-}
+//
+// export async function getStaticProps(context) {
+//     const res = await fetch(
+//         process.env.API_URL + 'users',
+//         {
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//         });
+//     const books = await res.json();
+//
+//     const resPage = await fetch(
+//         "http://localhost:5555/",
+//         {
+//             headers: {
+//                 'Content-Type': 'text/html'
+//             }
+//         });
+//     const page = await resPage.text();
+//     const page = "<div>Hello!</div>";
+//     return {
+//         props: {
+//             books,
+//             page
+//         }
+//     };
+// }
 
 export default Home;

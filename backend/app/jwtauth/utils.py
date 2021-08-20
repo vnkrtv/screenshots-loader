@@ -40,7 +40,6 @@ def create_profile(user: User, fullname: str) -> Profile:
     else:
         admission_year, group, number = 0, 0, 0
     return Profile.objects.create(
-        id=user.id,
         user=user,
         name=fullname,
         group=int(group),

@@ -48,7 +48,7 @@ class ScreenshotSerializer(serializers.ModelSerializer):
         return Screenshot.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.lesson = validation_data.get('lesson', instance.lesson)
+        instance.lesson = Lesson.objects.get(id=validated_data.get('lesson', instance.lesson))
         instance.user = validation_data.get('user', instance.user)
         instance.image = validation_data.get('image', instance.image)
         instance.description = validetion_data.get('description', instance.description)
@@ -57,4 +57,5 @@ class ScreenshotSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Screenshot
+        read_only_fields = ('id',)
         fields = ('id', 'lesson', 'user', 'image', 'description')

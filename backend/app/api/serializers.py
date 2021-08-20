@@ -12,6 +12,7 @@ from .models import Profile, Subject, Screenshot, Lesson
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = ('id', 'username')
@@ -43,8 +44,9 @@ class SubjectSerializer(serializers.ModelSerializer):
         model = Subject
         fields = ('id', 'name', 'description')
 
-<<<<<<< backend/app/api/serializers.py
+
 class ScreenshotSerializer(serializers.ModelSerializer):
+    
     def create(self, validated_data):
         return Screenshot.objects.create(**validated_data)
 
@@ -53,7 +55,15 @@ class ScreenshotSerializer(serializers.ModelSerializer):
         instance.user = validation_data.get('user', instance.user)
         instance.image = validation_data.get('image', instance.image)
         instance.description = validetion_data.get('description', instance.description)
-=======
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Screenshot
+        read_only_fields = ('id',)
+        fields = ('id', 'lesson', 'user', 'image', 'description')
+
+
 class LessonSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -62,18 +72,10 @@ class LessonSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.subject = Subject.objects.get(id=validated_data.get('subject', instance.subject))
         instance.description = validated_data.get('description', instance.description)
->>>>>>> backend/app/api/serializers.py
         instance.save()
         return instance
 
     class Meta:
-<<<<<<< backend/app/api/serializers.py
-        model = Screenshot
-        read_only_fields = ('id',)
-        fields = ('id', 'lesson', 'user', 'image', 'description')
-=======
         model = Lesson
         read_only_fields = ('id',)
         fields = ('id', 'subject', 'description')
-
->>>>>>> backend/app/api/serializers.py

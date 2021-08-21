@@ -2,6 +2,7 @@
 
 # backend
 backend/venv
+backend/app/db.sqlite3
 backend/static
 *pyc
 __pycache__

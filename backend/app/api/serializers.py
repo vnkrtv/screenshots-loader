@@ -36,6 +36,7 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
+        read_only_fields = ('id',)
         fields = ('id', 'name', 'description')
 
 
@@ -48,7 +49,7 @@ class ScreenshotSerializer(serializers.ModelSerializer):
         instance.lesson = Lesson.objects.get(id=validated_data.get('lesson', instance.lesson))
         instance.user = validation_data.get('user', instance.user)
         instance.image = validation_data.get('image', instance.image)
-        instance.description = validetion_data.get('description', instance.description)
+        instance.description = validation_data.get('description', instance.description)
         instance.save()
         return instance
 
@@ -64,6 +65,7 @@ class LessonSerializer(serializers.ModelSerializer):
         return Lesson.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
         instance.subject = Subject.objects.get(id=validated_data.get('subject', instance.subject))
         instance.description = validated_data.get('description', instance.description)
         instance.save()
@@ -72,4 +74,4 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         read_only_fields = ('id',)
-        fields = ('id', 'subject', 'description')
+        fields = ('id', 'name', 'subject', 'description')

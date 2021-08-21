@@ -40,6 +40,7 @@ export default function RegisterForm(props) {
                 type={"submit"}
                 variant="contained"
                 color="primary"
+                className={classes.button}
                 endIcon={<Send/>}
             >
                 Зарегистрироваться

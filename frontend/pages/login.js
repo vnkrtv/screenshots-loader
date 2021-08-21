@@ -1,107 +1,115 @@
-import {useState} from 'react'
-import {useRouter} from 'next/router'
-import cookie from "js-cookie"
-
-import Head from 'next/head'
-
-import Layout from '../components/layout'
-import {Button, Card, Container, FormControl, Input, InputLabel} from "@material-ui/core";
+import {useRouter} from "next/router";
+import {useState} from "react";
+import {
+    Card,
+    CardContent,
+    makeStyles,
+} from "@material-ui/core";
 import * as React from "react";
-import {Image} from "@material-ui/icons";
-import utilStyles from "../styles/utils.module.css";
+import cookie from "js-cookie";
+import Layout from "components/layout";
+import NotifyAlert, {alertType} from "components/alert/alert";
+import LoginForm from "components/form/login";
 
-
-fetch("http://localhost:5555/api/token/", {
-    method: "POST",
-    headers: {
-        'Content-Type': 'application/json'
+const useStyles = makeStyles((theme) => ({
+    button: {
+        marginTop: theme.spacing(2),
     },
-    body: JSON.stringify({
-        username: "vnkrtv",
-        password: "vnkrtv"
-    })
-})
-    .then(r => r.json())
-    .then(r => console.log(r))
-
-fetch("http://localhost:5555/api/users/", {
-    method: "GET",
-    headers: {'Authorization': 'JWT ' + cookie.get('jwt_token')},
-})
-    .then(r => r.json())
-    .then(r => console.log(r))
-
-export default function Login({req, res}) {
-
-    if(!res.body) {
-        res.statusCode = 404;
-        res.end('Error');
-        return;
+    form: {
+        margin: theme.spacing(4)
+    },
+    input: {
+        marginBottom: theme.spacing(2),
+    },
+    registerCard: {
+        width: "80%",
+        textAlign: "center",
     }
+}));
 
-    req.headers.get('')
-
-    cookie.get('')
-
-    const {username, password} = req.body;
-
-    // console.log(resJ);
+export default function Login({registerApiUrl: loginApiUrl}) {
     const router = useRouter();
-    const [query, setQuery] = useState('');
+    const classes = useStyles();
 
-    // const handleSubmit = preventDefault(() => {
-    //     router.push({
-    //         pathname: action,
-    //         query: {q: query},
-    //     })
-    // })
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-    const registerUser = async (e) => {
+    const handleClose = (event, reason) => {
+        setShowErrorAlert(false);
+    };
+
+    const loginUser = async (e) => {
         e.preventDefault();
-        const res = await fetch(
-            "http://localhost:5555/login/", {
+        fetch(
+            loginApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
-                    fullname: e.target.username.value,
+                    username: e.target.username.value,
                     password: e.target.password.value,
                 }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'X-CSFRToken': resJ.csrftoken
-                },
-                method: 'POST',
-                // credentials: "include"
-            });
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(res.status ? 'некорректные данные' : 'неизвестная ошибка');
+                }
+                return res.json()
+            })
+            .then(data => {
+                if (data.refresh && data.access) {
+                    cookie.set('jwt_access', data.access);
+                    cookie.set('jwt_refresh', data.refresh);
 
-        await router.push({
-            pathname: '/',
-            // query: {q: query},
-        })
+                    setShowSuccessAlert(true);
+
+                    router.push({
+                        pathname: '/',
+                    })
+                }
+            })
+            .catch(err => {
+                setErrorMsg('При регистрации произошла ошибка: ' + err.message);
+                setShowErrorAlert(true);
+            });
     };
 
     return (
-        <Card>
-            <form onSubmit={registerUser}>
-                <FormControl>
-                    <InputLabel htmlFor="fullanme">Username</InputLabel>
-                    <Input id={"username"} name={"username"} type={"text"}/>
-                </FormControl>
-                <br/>
-                <FormControl>
-                    <InputLabel htmlFor="password">Password</InputLabel>
-                    <Input id={"password"} name={"password"} type={"password"}/><br/>
-                </FormControl><br/>
-                <button className="">Sign In</button>
-            </form>
-        </Card>
+        <Layout siteTitle={"Войти"}>
+            <NotifyAlert
+                type={alertType.ERROR}
+                text={errorMsg}
+                open={showErrorAlert}
+                onClose={handleClose}
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                autoHideDuration={6000}
+            />
+            <NotifyAlert
+                type={alertType.SUCCESS}
+                text={"Регистрация прошла успешно!"}
+                open={showSuccessAlert}
+                onClose={handleClose}
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                autoHideDuration={6000}
+            />
+            <Card className={classes.registerCard}>
+                <CardContent>
+                    <LoginForm
+                        onSubmit={loginUser}
+                        classes={classes}
+                    />
+                </CardContent>
+            </Card>
+        </Layout>
     )
 }
 
-// export async function getStaticProps(context) {
-//     // const res = await fetch("http://localhost:5555/login/");
-//     const resJ = '';
-//     return {
-//         props: {
-//             resJ
-//         }
-//     }
-// }
+export async function getStaticProps() {
+    return {
+        props: {
+            registerApiUrl: process.env.LOGIN_API_URL
+        }
+    }
+}

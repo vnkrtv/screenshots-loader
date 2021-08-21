@@ -1,34 +1,41 @@
 import {useRouter} from "next/router";
 import {useState} from "react";
-import {Card, FormControl, Input, InputLabel, makeStyles, Snackbar} from "@material-ui/core";
+import {
+    Card,
+    CardContent,
+    makeStyles,
+} from "@material-ui/core";
 import * as React from "react";
-import MuiAlert from '@material-ui/lab/Alert';
 import cookie from "js-cookie";
-
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import Layout from "../components/layout";
+import NotifyAlert, {alertType} from "../components/alert/alert";
+import RegisterForm from "../components/form/register";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
+    button: {
+        marginTop: theme.spacing(2),
     },
+    form: {
+        margin: theme.spacing(4)
+    },
+    input: {
+        marginBottom: theme.spacing(2),
+    },
+    registerCard: {
+        width: "80%",
+        textAlign: "center",
+    }
 }));
 
-function Register({registerApiUrl}) {
+export default function Register({registerApiUrl}) {
     const router = useRouter();
+    const classes = useStyles();
 
-    const [showErrorAlert, setShowErrorAlert] = useState("");
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
-    const [showSuccessAlert, setShowSuccessAlert] = useState("");
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const handleClose = (event, reason) => {
-        // if (reason === 'clickaway') {
-        //     return;
-        // }
         setShowErrorAlert(false);
     };
 
@@ -37,7 +44,6 @@ function Register({registerApiUrl}) {
         fetch(
             registerApiUrl, {
                 method: 'POST',
-                // credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -66,61 +72,39 @@ function Register({registerApiUrl}) {
                     })
                 }
             })
-            .catch(err =>{
+            .catch(err => {
                 setErrorMsg('При регистрации произошла ошибка: ' + err.message);
                 setShowErrorAlert(true);
             });
     };
 
     return (
-        <Card>
-
-            <Snackbar
-                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+        <Layout siteTitle={"Зарегистрироваться"}>
+            <NotifyAlert
+                type={alertType.ERROR}
+                text={errorMsg}
                 open={showErrorAlert}
-                autoHideDuration={6000}
                 onClose={handleClose}
-            >
-                <Alert onClose={handleClose} severity="error">
-                    {errorMsg}
-                </Alert>
-            </Snackbar>
-
-            <Snackbar
                 anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                open={showSuccessAlert}
                 autoHideDuration={6000}
+            />
+            <NotifyAlert
+                type={alertType.SUCCESS}
+                text={"Регистрация прошла успешно!"}
+                open={showSuccessAlert}
                 onClose={handleClose}
-            >
-                <Alert onClose={handleClose} severity="success">
-                    Регистрация прошла успешно!
-                </Alert>
-            </Snackbar>
-
-            <form onSubmit={registerUser}>
-                <FormControl>
-                    <InputLabel htmlFor={"fullname"}>Полное имя с Gitlab</InputLabel>
-                    <Input id={"fullname"} name={"fullname"} type={"text"}/>
-                </FormControl>
-                <br/>
-                <FormControl>
-                    <InputLabel htmlFor={"username"}>Имя</InputLabel>
-                    <Input id={"username"} name={"username"} type={"username"}/><br/>
-                </FormControl>
-                <br/>
-                <FormControl>
-                    <InputLabel htmlFor={"password"}>Пароль</InputLabel>
-                    <Input id={"password"} name={"password"} type={"password"}/><br/>
-                </FormControl>
-                <br/>
-                <FormControl>
-                    <InputLabel htmlFor={"password2"}>Повторите пароль</InputLabel>
-                    <Input id={"password2"} name={"password2"} type={"password"}/><br/>
-                </FormControl>
-                <br/>
-                <button className="">Зарегистрироваться</button>
-            </form>
-        </Card>
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                autoHideDuration={6000}
+            />
+            <Card className={classes.registerCard}>
+                <CardContent>
+                    <RegisterForm
+                        onSubmit={registerUser}
+                        classes={classes}
+                    />
+                </CardContent>
+            </Card>
+        </Layout>
     )
 }
 
@@ -131,5 +115,3 @@ export async function getStaticProps() {
         }
     }
 }
-
-export default Register;

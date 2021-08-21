@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-q)4+nn(%&pte-$lpj=f@+7n$@g@w15jgpp(^7!g848*7!z7yv('
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-q)4+nn(%&pte-$lpj=f@+7n$@g@w15jgpp(^7!g848*7!z7yv(')
 
 DEBUG = os.getenv('DEBUG', False)
 
@@ -12,10 +12,12 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'api.apps.APIConfig',
+    'jwtauth.apps.JwtAuthConfig',
 
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    'rest_framework_swagger',
 
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -131,11 +133,17 @@ CORS_ALLOW_CREDENTIALS = True
 # CSRF_COOKIE_SECURE = False
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
 SIMPLE_JWT = {

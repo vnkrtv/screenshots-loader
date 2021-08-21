@@ -1,55 +1,15 @@
-from django.contrib.auth import logout, login
-from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.urls import reverse
-from django.views import View
-from django.template.context_processors import csrf
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
-
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from . import utils
-from .decorators import unauthenticated_user, allowed_users
-from .models import Profile, Subject, Lesson
+from .models import Profile, Subject, Lesson, Screenshot
 from .permissions import EditingForLecturerOnly
-from .serializers import ProfileSerializer, SubjectSerializer, LessonSerializer
-
-
-@unauthenticated_user
-def index(request: HttpRequest) -> HttpResponse:
-    """Home page"""
-    context = {
-        'title': 'Screenshots loader'
-    }
-    return JsonResponse({
-        'csrftoken': str(csrf(request)['csrf_token'])
-    })
-
-
-class LoginView(View):
-
-    # def get(self, request: HttpRequest) -> HttpResponse:
-    #     """Authorize user and redirect him to available_tests page"""
-    #     # logout(request)
-    #
-    #     # login(request, user)
-    #     # return redirect(reverse('main:index'))
-    #     return JsonResponse({
-    #         'csrftoken': str(csrf(request)['csrf_token'])
-    #     })
-
-    def post(self, request: HttpRequest) -> HttpResponse:
-        return JsonResponse({
-            'user': 'user'
-        })
+from .serializers import ProfileSerializer, SubjectSerializer, LessonSerializer, ScreenshotSerializer
 
 
 class UserAPI(APIView):
-    authentication_classes = []
-    permission_classes = []
-    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, request):
         users = Profile.objects.all()
@@ -61,19 +21,16 @@ class UserAPI(APIView):
         serializer = ProfileSerializer(users, many=True)
         return Response({
             'users': serializer.data
-        })
+        }, status.HTTP_200_OK)
 
 
 class SubjectAPI(APIView):
-    authentication_classes = []
-    permission_classes = []
-    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = SubjectSerializer(Subject.objects.all(), many=True)
         return Response({
             'subjects': serializer.data
-        })
+        }, status.HTTP_200_OK)
 
     def post(self, request):
         serializer = SubjectSerializer(data=request.data)
@@ -81,7 +38,7 @@ class SubjectAPI(APIView):
             new_subject = serializer.save()
         return Response({
             'success': "Предмет '%s' успешно добавлен." % new_subject.name
-        })
+        }, status.HTTP_201_CREATED)
 
     def put(self, request, subject_id):
         updated_subject = get_object_or_404(Subject.objects.all(), pk=subject_id)
@@ -90,7 +47,7 @@ class SubjectAPI(APIView):
             updated_subject = serializer.save()
         return Response({
             'success': "Предмет '%s' был успешно отредактирован." % updated_subject.name
-        })
+        }, status.HTTP_200_OK)
 
     def delete(self, _, subject_id):
         subject = get_object_or_404(Subject.objects.all(), pk=subject_id)
@@ -99,36 +56,33 @@ class SubjectAPI(APIView):
         subject.delete()
         return Response({
             'success': message
-        })
+        }, status.HTTP_200_OK)
 
 
 class ScreenshotAPI(APIView):
-    authentication_classes = []
-    permission_classes = []
-    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = ScreenshotSerializer(Screenshot.objects.all(), many=True)
         return Response({
             'screenshots': serializer.data
-        })
+        }, status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = ScreeshotSerializer(data=request.data)
+        serializer = ScreenshotSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             new_screenshot = serializer.save()
         return Response({
             'success': "Скриншот '%s' успешно добавлен." % new_screenshot.name
-        })
+        }, status.HTTP_201_CREATED)
 
     def put(self, request, screenshot_id):
-        updated_screenhot = get_object_or_404(Screenshot.objects.all(), pk=screenshot_id)
+        updated_screenshot = get_object_or_404(Screenshot.objects.all(), pk=screenshot_id)
         serializer = ScreenshotSerializer(instance=updated_screenshot, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             updated_screenshot = serializer.save()
         return Response({
             'success': "Скриншот '%s' был успешно отредактирован." % updated_screenshot.name
-        })
+        }, status.HTTP_200_OK)
 
     def delete(self, _, screenshot_id):
         screenshot = get_object_or_404(Screenshot.objects.all(), pk=screenshot_id)
@@ -136,19 +90,16 @@ class ScreenshotAPI(APIView):
         screenshot.delete()
         return Response({
             'success': message
-        })
+        }, status.HTTP_200_OK)
 
 
 class LessonAPI(APIView):
-    authentication_classes = []
-    permission_classes = []
-    # permission_classes = [IsAuthenticated, EditingForLecturerOnly]
 
     def get(self, _):
         serializer = LessonSerializer(Lesson.objects.all(), many=True)
         return Response({
             'lessons': serializer.data
-        })
+        }, status.HTTP_200_OK)
 
     def post(self, request):
         serializer = LessonSerializer(data=request.data)
@@ -156,7 +107,7 @@ class LessonAPI(APIView):
             new_lesson = serializer.save()
         return Response({
             'success': "Учебное занятие '%s' успешно добавлен." % new_lesson.name
-        })
+        }, status.HTTP_201_CREATED)
 
     def put(self, request, lesson_id):
         updated_lesson = get_object_or_404(Lesson.objects.all(), pk=lesson_id)
@@ -165,7 +116,7 @@ class LessonAPI(APIView):
             updated_lesson = serializer.save()
         return Response({
             'success': "Учебное занятие '%s' было успешно отредактировано." % updated_lesson.name
-        })
+        }, status.HTTP_200_OK)
 
     def delete(self, _, lesson_id):
         lesson = get_object_or_404(Lesson.objects.all(), pk=lesson_id)
@@ -173,4 +124,4 @@ class LessonAPI(APIView):
         lesson.delete()
         return Response({
             'success': message
-        })
+        }, status.HTTP_200_OK)

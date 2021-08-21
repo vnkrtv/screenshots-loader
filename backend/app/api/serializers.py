@@ -1,9 +1,3 @@
-import json
-import pathlib
-from typing import List, Dict, Any
-
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
 
 from rest_framework import serializers

@@ -9,7 +9,7 @@ export default function LoginForm(props) {
     return (
         <Form onSubmit={onSubmit} className={classes.form}>
             <Typography gutterBottom variant={"h5"} component={"h2"}>
-                Введите данные
+                Войти в систему
             </Typography>
             <TextField
                 label={"Имя"}

@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 import {useState} from "react";
 import {
     Card,
-    CardContent,
+    CardContent, Link,
     makeStyles,
 } from "@material-ui/core";
 import * as React from "react";
@@ -100,6 +100,11 @@ export default function Login({registerApiUrl: loginApiUrl}) {
                         onSubmit={loginUser}
                         classes={classes}
                     />
+                    <Link
+                        href={"/register"}
+                    >
+                        Зарегистрироваться
+                    </Link>
                 </CardContent>
             </Card>
         </Layout>

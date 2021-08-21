@@ -9,7 +9,7 @@ export default function RegisterForm(props) {
     return (
         <Form onSubmit={onSubmit} className={classes.form}>
             <Typography gutterBottom variant={"h5"} component={"h2"}>
-                Введите данные
+                Регистрация
             </Typography>
             <TextField
                 label={"Полное имя с Gitlab"}
@@ -40,6 +40,7 @@ export default function RegisterForm(props) {
                 type={"submit"}
                 variant="contained"
                 color="primary"
+                className={classes.button}
                 endIcon={<Send/>}
             >
                 Зарегистрироваться

@@ -7,13 +7,13 @@ import {
 } from "@material-ui/core";
 import * as React from "react";
 import cookie from "js-cookie";
-import Layout from "../components/layout";
-import NotifyAlert, {alertType} from "../components/alert/alert";
-import RegisterForm from "../components/form/register";
+import Layout from "components/layout";
+import NotifyAlert, {alertType} from "components/alert/alert";
+import RegisterForm from "components/form/register";
 
 const useStyles = makeStyles((theme) => ({
     button: {
-        marginTop: theme.spacing(2),
+        // marginTop: theme.spacing(2),
     },
     form: {
         margin: theme.spacing(4)
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     registerCard: {
         width: "80%",
         textAlign: "center",
+        justifyItems: "center",
     }
 }));
 

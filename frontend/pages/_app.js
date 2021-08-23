@@ -1,26 +1,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Head from 'next/head';
 import {ThemeProvider} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../src/theme';
-import {wrapper} from '../redux/store'
-import Typography from "@material-ui/core/Typography";
-import {useRouter} from "next/router";
+import theme from 'styles/theme';
+import {Provider} from 'react-redux'
+import {useStore} from 'store/store'
 
 const App = ({Component, pageProps}) => {
-    // const { Component, pageProps } = props;
+    const store = useStore(pageProps.initialReduxState)
 
     return (
         <>
-            <Head>
-                <meta name="viewport" content="initial-scale=1, width=device-width"/>
-            </Head>
-            <ThemeProvider theme={theme}>
-                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-                <CssBaseline/>
-                <Component {...pageProps} />
-            </ThemeProvider>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline/>
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </Provider>
         </>
     );
 }
@@ -31,4 +27,4 @@ App.propTypes = {
     pageProps: PropTypes.object.isRequired,
 };
 
-export default wrapper.withRedux(App);
+export default App;

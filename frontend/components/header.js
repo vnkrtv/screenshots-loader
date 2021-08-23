@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,11 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import {Nav} from "react-bootstrap";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,15 +26,10 @@ const useStyles = makeStyles((theme) => ({
   elevation: 1
 }));
 
-export default function MenuAppBar() {
+export default function MenuAppBar({user}) {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,13 +40,7 @@ export default function MenuAppBar() {
   };
 
   return (
-    <nav>
-      {/*<FormGroup>*/}
-      {/*  <FormControlLabel*/}
-      {/*    control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}*/}
-      {/*    label={auth ? 'Logout' : 'Login'}*/}
-      {/*  />*/}
-      {/*</FormGroup>*/}
+    <Nav>
       <AppBar position="static" elevation={classes.elevation} className={classes.AppBarMain}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -62,18 +49,18 @@ export default function MenuAppBar() {
           <Typography variant="h6" className={classes.title}>
             Photos
           </Typography>
-          {auth && (
-            <div>
-              <IconButton
+          <div>
+            <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
+            >
+              {user.username}
+              <AccountCircle />
+            </IconButton>
+            <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -87,14 +74,13 @@ export default function MenuAppBar() {
                 }}
                 open={open}
                 onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
-          )}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>My account</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
-    </nav>
+    </Nav>
   );
 }

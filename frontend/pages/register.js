@@ -10,6 +10,11 @@ import cookie from "js-cookie";
 import Layout from "components/layout";
 import NotifyAlert, {alertType} from "components/alert/alert";
 import RegisterForm from "components/form/register";
+import {initializeStore} from "../store/store";
+import {loginUser, userFetch} from "../store/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {setJwtTokens} from "../utils/jwt";
+import {loginUserFetch} from "../api/UsersAPI";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -32,46 +37,41 @@ export default function Register({registerApiUrl}) {
     const router = useRouter();
     const classes = useStyles();
 
+    const dispatch = useDispatch();
+    const {loggedIn} = useSelector((state => state.loggedIn));
+
+    if (typeof window !== 'undefined' && loggedIn) {
+        router
+            .push('/')
+            .then();
+    }
+
     const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const handleClose = (event, reason) => {
         setShowErrorAlert(false);
     };
 
-    const registerUser = async (e) => {
+    const handleRegisterSubmit = async (e) => {
         e.preventDefault();
-        fetch(
-            registerApiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    fullname: e.target.fullname.value,
-                    username: e.target.username.value,
-                    password: e.target.password.value,
-                    password2: e.target.password2.value,
-                }),
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(res.status ? 'некорректные данные' : 'неизвестная ошибка');
-                }
-                return res.json()
-            })
-            .then(data => {
-                if (data.refresh && data.access) {
-                    cookie.set('jwt_access', data.access);
-                    cookie.set('jwt_refresh', data.refresh);
+        const registerUser = {
+            fullname: e.target.fullname.value,
+            username: e.target.username.value,
+            password: e.target.password.value,
+            password2: e.target.password2.value,
+        };
+        loginUserFetch(registerApiUrl, registerUser)
+            .then(({access, refresh}) => {
+                setJwtTokens(access, refresh);
 
-                    setShowSuccessAlert(true);
+                dispatch(loginUser({
+                    username: e.target.username.value
+                }));
 
-                    router.push({
-                        pathname: '/',
-                    })
-                }
+                router.push({
+                    pathname: '/',
+                });
             })
             .catch(err => {
                 setErrorMsg('При регистрации произошла ошибка: ' + err.message);
@@ -89,18 +89,10 @@ export default function Register({registerApiUrl}) {
                 anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                 autoHideDuration={6000}
             />
-            <NotifyAlert
-                type={alertType.SUCCESS}
-                text={"Регистрация прошла успешно!"}
-                open={showSuccessAlert}
-                onClose={handleClose}
-                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                autoHideDuration={6000}
-            />
             <Card className={classes.registerCard}>
                 <CardContent>
                     <RegisterForm
-                        onSubmit={registerUser}
+                        onSubmit={handleRegisterSubmit}
                         classes={classes}
                     />
                 </CardContent>

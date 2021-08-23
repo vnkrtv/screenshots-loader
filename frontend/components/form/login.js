@@ -9,7 +9,7 @@ export default function LoginForm(props) {
     return (
         <Form onSubmit={onSubmit} className={classes.form}>
             <Typography gutterBottom variant={"h5"} component={"h2"}>
-                Войти в систему
+                {"Войти в систему"}
             </Typography>
             <TextField
                 label={"Имя"}
@@ -30,7 +30,7 @@ export default function LoginForm(props) {
                 className={classes.button}
                 endIcon={<Send/>}
             >
-                Войти
+                {"Войти"}
             </Button>
         </Form>
     )
